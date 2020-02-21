@@ -50,15 +50,25 @@ void setup() {
   
 }
 
+void secondsDelay(int n) 
+{
+    int i = 0;
+    for (i=0; i < n; i++) {
+      delay(1000);
+    }  
+}
+
 void loop()
 {
-    int speed = 120;
+    int speed = 200;
+    
     analogWrite(motorPin, speed);
     
     //Serial.println(dir);
-    delay(50);
-    
-    thetaDeg = (float)count*0.6;
+    secondsDelay(5);
+    analogWrite(motorPin, 0);
+    secondsDelay(5);
+    thetaDeg = (float)count*1.8;
     
     Serial.println(thetaDeg);
 }
