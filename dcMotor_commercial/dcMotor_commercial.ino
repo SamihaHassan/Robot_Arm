@@ -3,7 +3,7 @@ Adafruit Arduino - Lesson 13. DC Motor
 */
  
  
-int motorPin = 3;
+int motorPin = 4;
 
 void secondsDelay(int n) 
 {
@@ -25,8 +25,8 @@ void loop()
 { 
     
     //secondsDelay(3);
-    int speed = 150;
-    if (speed >= 0 && speed <= 255)
+    int speed = 200;
+    if (speed >= 0 && speed <= 250)
     {
       analogWrite(motorPin, speed);
     }

@@ -7,10 +7,6 @@ int dir = 0;
 int count = 0;
 float thetaDeg = 0;
 
-int motorPin = 4;
-int DirecOne = 7;
-int DirecTwo = 6;
-
 void ISRA() {
   dir = (valA ^ valB) ? 0 : 1;
   valA = digitalRead(ruptPinA);
@@ -25,16 +21,6 @@ void ISRB() {
 
 }
 
-void spinFWD() {
-  digitalWrite(DirecOne, LOW);
-  digitalWrite(DirecTwo, HIGH);
-}
-
-void spinREV() {
-  digitalWrite(DirecOne, HIGH);
-  digitalWrite(DirecTwo, LOW);  
-}
-
 void setup() {
   Serial.begin(9600);
   attachInterrupt(digitalPinToInterrupt(ruptPinA),ISRA,CHANGE);
@@ -43,18 +29,10 @@ void setup() {
   valB = digitalRead(ruptPinB);
   dir = (valA ^ valB) ? 0 : 1;
   count = 0;
-  pinMode(motorPin, OUTPUT); //PWM pin
-  pinMode(DirecOne, OUTPUT); 
-  pinMode(DirecTwo, OUTPUT); 
-  spinFWD();
-  
 }
 
 void loop()
 {
-    int speed = 120;
-    analogWrite(motorPin, speed);
-    
     //Serial.println(dir);
     delay(50);
     
