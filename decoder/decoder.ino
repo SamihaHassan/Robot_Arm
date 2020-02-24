@@ -1,4 +1,3 @@
-
 int ruptPinA = 2;
 int ruptPinB = 3;
 int valA = 0;
@@ -11,29 +10,17 @@ int motorPin = 4;
 int DirecOne = 7;
 int DirecTwo = 6;
 
-void ISRA() {
-  dir = (valA ^ valB) ? 0 : 1;
-  valA = digitalRead(ruptPinA);
-  dir ? count++ : count--;
-  
-}
+void secondsDelay(int n);
+
+//Interrupts from slot detectors to determine the direction of spin
+void ISRA();
+void ISRB();
+
+//motor driver setup
+void spinFWD();
+void spinREV();
 
 
-void ISRB() {
-  valB = digitalRead(ruptPinB);
-  dir = (valA ^ valB) ? 0 : 1;
-
-}
-
-void spinFWD() {
-  digitalWrite(DirecOne, LOW);
-  digitalWrite(DirecTwo, HIGH);
-}
-
-void spinREV() {
-  digitalWrite(DirecOne, HIGH);
-  digitalWrite(DirecTwo, LOW);  
-}
 
 void setup() {
   Serial.begin(9600);
@@ -50,14 +37,6 @@ void setup() {
   
 }
 
-void secondsDelay(int n) 
-{
-    int i = 0;
-    for (i=0; i < n; i++) {
-      delay(1000);
-    }  
-}
-
 void loop()
 {
     int speed = 200;
@@ -71,4 +50,37 @@ void loop()
     thetaDeg = (float)count*1.8;
     
     Serial.println(thetaDeg);
+}
+
+
+void ISRA() {
+  dir = (valA ^ valB) ? 0 : 1;
+  valA = digitalRead(ruptPinA);
+  dir ? count++ : count--;
+  
+}
+
+void ISRB() {
+  valB = digitalRead(ruptPinB);
+  dir = (valA ^ valB) ? 0 : 1;
+
+}
+
+
+void spinFWD() {
+  digitalWrite(DirecOne, LOW);
+  digitalWrite(DirecTwo, HIGH);
+}
+
+void spinREV() {
+  digitalWrite(DirecOne, HIGH);
+  digitalWrite(DirecTwo, LOW);  
+}
+
+void secondsDelay(int n) 
+{
+    int i = 0;
+    for (i=0; i < n; i++) {
+      delay(1000);
+    }  
 }
