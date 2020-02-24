@@ -1,5 +1,7 @@
 #include <Arduino.h>
 #include <globals.h>
+#include <pid_controller.h>
+
 
 int valA = 0;
 int valB = 0;
@@ -17,7 +19,8 @@ void ISRB();
 void spinFWD();
 void spinREV();
 
-
+PIDVariables* motorPIDA;
+PID pid;
 
 void setup() {
   Serial.begin(9600);
@@ -36,17 +39,17 @@ void setup() {
 
 void loop()
 {
-    int speed = 200;
-    
-    analogWrite(MOTOR_PIN_A, speed);
-    
     //Serial.println(dir);
+    int speed = 200;
+    analogWrite(MOTOR_PIN_A, speed); 
     secondsDelay(5);
-    analogWrite(MOTOR_PIN_A, 0);
+    analogWrite(MOTOR_PIN_A, 0); //stop motor
     secondsDelay(5);
+
     thetaDeg = (float)count*1.8;
-    
-    Serial.println(thetaDeg);
+    //Serial.println(thetaDeg);
+
+    //pid.PID(motorPIDA, thetaDeg);
 }
 
 

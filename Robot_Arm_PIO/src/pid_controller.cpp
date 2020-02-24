@@ -4,7 +4,7 @@
 
 unsigned long delta_t = 0;
 
-float PID(PIDVariables* motorPID, float theta_desired) {
+float PID::PID(PIDVariables* motorPID, float theta_desired) {
 
     motorPID->time = millis();
     delta_t = motorPID->last_time - motorPID->time;
