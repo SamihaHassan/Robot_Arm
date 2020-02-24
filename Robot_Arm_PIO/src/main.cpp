@@ -8,6 +8,7 @@ int valB = 0;
 int dir = 0;
 int count = 0;
 float thetaDeg = 0;
+float thetaDesired = 0;
 
 void secondsDelay(int n);
 
@@ -19,8 +20,7 @@ void ISRB();
 void spinFWD();
 void spinREV();
 
-PIDVariables* motorPIDA;
-PID pid;
+PID* PIDA;
 
 void setup() {
   Serial.begin(9600);
@@ -38,7 +38,8 @@ void setup() {
 }
 
 void loop()
-{
+{   
+    PIDA->ComputePID(thetaDesired);
     //Serial.println(dir);
     int speed = 200;
     analogWrite(MOTOR_PIN_A, speed); 

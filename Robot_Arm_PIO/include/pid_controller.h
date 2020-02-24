@@ -12,19 +12,19 @@ class PID
     #define K_D 0
     #define K_I 0
 
-    struct PIDVariables{
-        float error;
-        float errorSum = 0;
-        float proportional;
-        float derivative;
-        float integral;
-        float prev_error = 0;
-        unsigned long last_time = millis();
-        unsigned long time = 0;
-        float theta;
-    };
+    float ComputePID(float theta_desired);
 
-    float PID(PIDVariables* motorPID, float theta_desired);
-} //end class  
+  private:
+
+    float error;
+    float errorSum = 0;
+    float proportional=0;
+    float derivative;
+    float integral;
+    float prev_error = 0;
+    float last_time = millis();
+    float time = 0;
+    float theta;
+}; //end class  
 
 #endif

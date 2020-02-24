@@ -4,20 +4,20 @@
 
 unsigned long delta_t = 0;
 
-float PID::PID(PIDVariables* motorPID, float theta_desired) {
+float PID::ComputePID(float theta_desired) {
 
-    motorPID->time = millis();
-    delta_t = motorPID->last_time - motorPID->time;
+    time = millis();
+    delta_t = last_time - time;
     //theta_current = ReadTheta(0); //0 represents first motor
-    motorPID->error = theta_desired - motorPID->theta;
-    motorPID->proportional = motorPID->error * K_P;
-    motorPID->derivative = (motorPID->error - motorPID->prev_error) * K_D;
-    motorPID->errorSum += motorPID->error;
-    motorPID->integral += motorPID->errorSum * delta_t * K_I;
+    error = theta_desired - theta;
+    proportional = error * K_P;
+    derivative = (error - prev_error) * K_D;
+    errorSum += error;
+    integral += errorSum * (float)delta_t * K_I; 
     
-    motorPID->prev_error = motorPID->error;
-    motorPID->last_time = motorPID->time;
+    prev_error = error;
+    last_time = time;
     
-    return motorPID->proportional + motorPID->derivative + motorPID->integral;
+    return proportional + derivative + integral;
 
-} //end
+}; //end
