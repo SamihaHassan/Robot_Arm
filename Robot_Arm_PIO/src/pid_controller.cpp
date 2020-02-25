@@ -38,6 +38,15 @@ float PID::ApplyPID(float thetaPID, int dir, float theta) {
         if (thetaPID < theta)
         //turn motor fwd
     }
+
+    //MAP THE DELTA IN THETA TO 0 TO 255
+    if (thetaPID - theta > 180) {
+        //turn rev
+    }
+
+    else {
+        //turn fwd
+    }
     
 
 };
