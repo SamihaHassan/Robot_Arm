@@ -9,6 +9,7 @@ int dir = 0;
 int count = 0;
 float thetaDeg = 0;
 float thetaDesired = 0;
+float thetaPID = 0;
 
 void secondsDelay(int n);
 
@@ -39,7 +40,15 @@ void setup() {
 
 void loop()
 {   
-    PIDA->ComputePID(thetaDesired);
+    //read input for theta setpoint; thetaDesired = ?
+
+    //read theta from encoder;
+    thetaDeg = (float)count*1.8; //Serial.println(thetaDeg);
+
+    //compute PID on theta desired
+    thetaPID = PIDA->ComputePID(thetaDesired, thetaDeg);
+    PIDA->ApplyPID(thetaPID);
+    
     //Serial.println(dir);
     int speed = 200;
     analogWrite(MOTOR_PIN_A, speed); 
@@ -47,8 +56,7 @@ void loop()
     analogWrite(MOTOR_PIN_A, 0); //stop motor
     secondsDelay(5);
 
-    thetaDeg = (float)count*1.8;
-    //Serial.println(thetaDeg);
+    
 
     //pid.PID(motorPIDA, thetaDeg);
 }

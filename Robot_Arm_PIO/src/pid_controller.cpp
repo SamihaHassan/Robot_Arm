@@ -4,7 +4,7 @@
 
 unsigned long delta_t = 0;
 
-float PID::ComputePID(float theta_desired) {
+float PID::ComputePID(float theta_desired, float theta) {
 
     time = millis();
     delta_t = last_time - time;
@@ -12,12 +12,32 @@ float PID::ComputePID(float theta_desired) {
     error = theta_desired - theta;
     proportional = error * K_P;
     derivative = (error - prev_error) * K_D;
-    errorSum += error;
-    integral += errorSum * (float)delta_t * K_I; 
+    errorSum += error * (float)delta_t;
+    integral += errorSum * K_I; 
     
     prev_error = error;
     last_time = time;
     
     return proportional + derivative + integral;
-
+    
 }; //end
+
+float PID::ApplyPID(float thetaPID, int dir, float theta) {
+    if (dir == 1) {
+        if (thetaPID > theta)
+        //turn motor fwd
+
+        if (thetaPID < theta)
+        //turn motor reverse
+    }
+
+    else  {
+        if (thetaPID > theta)
+        // turn motor reverse
+
+        if (thetaPID < theta)
+        //turn motor fwd
+    }
+    
+
+};
