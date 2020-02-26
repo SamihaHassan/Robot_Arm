@@ -9,17 +9,19 @@ int dir = 0;
 int count = 0;
 float thetaDeg = 0;
 float thetaDesired = 0;
-float thetaPID = 0;
+float pid = 0;
+int pwm = 0;
 
 void secondsDelay(int n);
 
 //Interrupts from slot detectors to determine the direction of spin
 void ISRA();
 void ISRB();
-
 //motor driver setup
-void spinFWD();
-void spinREV();
+void setFWD();
+void setREV();
+//compute PID function in pid_controller lib and apply PID in main
+void applyPID();
 
 PID* PIDA;
 
@@ -34,7 +36,7 @@ void setup() {
   pinMode(MOTOR_PIN_A, OUTPUT); //PWM pin
   pinMode(DIREC_A, OUTPUT); 
   pinMode(DIREC_B, OUTPUT); 
-  spinFWD();
+  setFWD();
   
 }
 
@@ -46,8 +48,11 @@ void loop()
     thetaDeg = (float)count*1.8; //Serial.println(thetaDeg);
 
     //compute PID on theta desired
-    thetaPID = PIDA->ComputePID(thetaDesired, thetaDeg);
-    PIDA->ApplyPID(thetaPID);
+    pid = PIDA->ComputePID(thetaDesired, thetaDeg);
+    applyPID();
+    
+    
+    //PIDA->ApplyPID(thetaPID);
     
     //Serial.println(dir);
     int speed = 200;
@@ -59,6 +64,22 @@ void loop()
     
 
     //pid.PID(motorPIDA, thetaDeg);
+}
+
+void applyPID() {
+    pwm = (int)pid;
+    
+    if (thetaDesired - thetaDeg < 180) {
+        //turn fwd
+        setFWD();
+        analogWrite(pwm, MOTOR_PIN_A);
+    }
+
+    else {
+        //turn rev
+        setREV();
+        analogWrite(pwm, MOTOR_PIN_A);
+    }
 }
 
 
@@ -76,12 +97,12 @@ void ISRB() {
 }
 
 
-void spinFWD() {
+void setFWD() {
   digitalWrite(DIREC_A, LOW);
   digitalWrite(DIREC_B, HIGH);
 }
 
-void spinREV() {
+void setREV() {
   digitalWrite(DIREC_A, HIGH);
   digitalWrite(DIREC_B, LOW);  
 }

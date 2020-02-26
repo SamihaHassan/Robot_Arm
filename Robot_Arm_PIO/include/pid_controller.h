@@ -13,7 +13,7 @@ class PID
     #define K_I 0
 
     float ComputePID(float theta_desired, float theta);
-    float ApplyPID(float thetaPID);
+    //float ApplyPID(float thetaPID, int dir, float theta);
 
   private:
 
@@ -26,6 +26,7 @@ class PID
     float last_time = millis();
     float time = 0;
     float thetaPID;
+    
     //float theta; //this should be in main
 }; //end class  
 
