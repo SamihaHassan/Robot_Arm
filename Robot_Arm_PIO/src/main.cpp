@@ -27,7 +27,7 @@ PID* PIDA;
 
 void setup() {
   Serial.begin(9600);
-  attachInterrupt(digitalPinToInterrupt(RUPT_PIN_A),ISRA,CHANGE);
+ // attachInterrupt(digitalPinToInterrupt(RUPT_PIN_A),ISRA,CHANGE);
   attachInterrupt(digitalPinToInterrupt(RUPT_PIN_B),ISRB,CHANGE);
   valA = digitalRead(RUPT_PIN_A); //initial reading
   valB = digitalRead(RUPT_PIN_B);
@@ -43,21 +43,21 @@ void setup() {
 void loop()
 {       
     //Serial.println(dir);
-    int speed = 200;
-    analogWrite(MOTOR_PIN_A, speed); 
-    secondsDelay(5);
-    analogWrite(MOTOR_PIN_A, 0); //stop motor
-    secondsDelay(5);
+    // int speed = 200;
+    // analogWrite(MOTOR_PIN_A, speed); 
+    // secondsDelay(5);
+    // analogWrite(MOTOR_PIN_A, 0); //stop motor
+    // secondsDelay(5);
 
     //read input for theta setpoint; thetaDesired = ?
     thetaDesired = 30;
+    thetaDeg = 10;  // Serial.println(thetaDeg);
     //read theta from encoder;
-    thetaDeg = (float)count*1.8; //
-    Serial.println(thetaDeg);
-
+    // thetaDeg = (float)count*1.8; //
+    
     //compute PID on theta desired
-    // pid = PIDA->ComputePID(thetaDesired, thetaDeg);
-    // Serial.println(pid);
+    pid = PIDA->ComputePID(thetaDesired, thetaDeg); //Serial.println(pid);
+  
     //applyPID();
     
 

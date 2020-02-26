@@ -8,8 +8,9 @@ class PID
 
   public: 
 
-    #define K_P 0
-    #define K_D 0
+   // #define K_P 2
+   
+    #define K_D 3
     #define K_I 0
 
     float ComputePID(float theta_desired, float theta);
@@ -23,9 +24,10 @@ class PID
     float derivative;
     float integral;
     float prev_error = 0;
-    float last_time = millis();
-    float time = 0;
+    unsigned long last_time = millis();
+    //unsigned long time = 0;
     float thetaPID;
+    float output;
     
     //float theta; //this should be in main
 }; //end class  
