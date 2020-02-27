@@ -1,7 +1,7 @@
+#include <stdlib.h>
 #include <Arduino.h>
 #include <globals.h>
 #include <pid_controller.h>
-
 
 int valA = 0;
 int valB = 0;
@@ -11,6 +11,12 @@ float thetaDeg = 0;
 float thetaDesired = 0;
 float pid = 0;
 int pwm = 0;
+
+//PID controller variables 
+unsigned long time = 0; 
+unsigned long prev_time = 0; 
+unsigned long delta_t; 
+float error; 
 
 void secondsDelay(int n);
 
@@ -27,21 +33,21 @@ PID* PIDA;
 
 void setup() {
   Serial.begin(9600);
- // attachInterrupt(digitalPinToInterrupt(RUPT_PIN_A),ISRA,CHANGE);
-  attachInterrupt(digitalPinToInterrupt(RUPT_PIN_B),ISRB,CHANGE);
-  valA = digitalRead(RUPT_PIN_A); //initial reading
-  valB = digitalRead(RUPT_PIN_B);
-  dir = (valA ^ valB) ? 0 : 1;
-  count = 0;
-  pinMode(MOTOR_PIN_A, OUTPUT); //PWM pin
-  pinMode(DIREC_A, OUTPUT); 
-  pinMode(DIREC_B, OUTPUT); 
-  setFWD();
-  
+  // attachInterrupt(digitalPinToInterrupt(RUPT_PIN_A),ISRA,CHANGE);
+  // attachInterrupt(digitalPinToInterrupt(RUPT_PIN_B),ISRB,CHANGE);
+  // valA = digitalRead(RUPT_PIN_A); //initial reading
+  // valB = digitalRead(RUPT_PIN_B);
+  // dir = (valA ^ valB) ? 0 : 1;
+  // count = 0;
+  // pinMode(MOTOR_PIN_A, OUTPUT); //PWM pin
+  // pinMode(DIREC_A, OUTPUT); 
+  // pinMode(DIREC_B, OUTPUT); 
+  // setFWD();
+   
 }
 
 void loop()
-{       
+{        
     //Serial.println(dir);
     // int speed = 200;
     // analogWrite(MOTOR_PIN_A, speed); 
@@ -50,13 +56,28 @@ void loop()
     // secondsDelay(5);
 
     //read input for theta setpoint; thetaDesired = ?
+    
+    //calculate the error value
     thetaDesired = 30;
     thetaDeg = 10;  // Serial.println(thetaDeg);
+    error = (thetaDesired - thetaDeg); 
+    
+    prev_time = time; 
+    time = millis(); 
+    delta_t = time - prev_time; 
+
+    //values passed to the PID_CONTROLLER
+    Serial.println("-----------------------");
+    Serial.print("error: ");
+    Serial.println(error);
+    Serial.print("delta_t: ");
+    Serial.println(delta_t);
+
     //read theta from encoder;
     // thetaDeg = (float)count*1.8; //
     
     //compute PID on theta desired
-    pid = PIDA->ComputePID(thetaDesired, thetaDeg); //Serial.println(pid);
+    pid = PIDA->ComputePID(delta_t, error); //Serial.println(pid);
   
     //applyPID();
     
