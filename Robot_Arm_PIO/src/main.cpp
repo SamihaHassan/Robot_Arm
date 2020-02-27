@@ -29,7 +29,7 @@ void setREV();
 //compute PID function in pid_controller lib and apply PID in main
 void applyPID();
 
-PID* PIDA;
+PID* PIDA = new PID();
 
 void setup() {
   Serial.begin(9600);
@@ -58,7 +58,7 @@ void loop()
     //read input for theta setpoint; thetaDesired = ?
     
     //calculate the error value
-    thetaDesired = 30;
+    thetaDesired = 60;
     thetaDeg = 10;  // Serial.println(thetaDeg);
     error = (thetaDesired - thetaDeg); 
     

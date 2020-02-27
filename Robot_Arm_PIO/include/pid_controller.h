@@ -5,24 +5,28 @@
 
 class PID
 {
+  
 
-  public: 
-
-    #define K_P 2
+  private:
+    float proportional; 
+    float derivative;
+    float integral;
+    float errorSum;
+    float prev_error;   
+    float output; 
+    
+  public:
+    #define K_P 11
     #define K_D 1
     #define K_I 0
     
+    PID();
     float ComputePID(unsigned long delta_t, float error);
-    float output;
-
-
-  private:
-
-    float errorSum = 0.0;
-    float proportional=0.0;
-    float derivative = 0.0 ;
-    float integral = 0.0;
-    float prev_error = 0.0;
+    //PID() : proportional(0.0), derivative(5.0), integral(0.0), errorSum(0.0), prev_error(0.0), output(0.0) {}
+    //  Box(double l = 2.0, double b = 2.0, double h = 2.0) {
+    
+    
+  
    
     
 }; //end class  
