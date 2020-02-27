@@ -59,7 +59,7 @@ void loop()
     
     //calculate the error value
     thetaDesired = 60;
-    thetaDeg = 10;  // Serial.println(thetaDeg);
+    thetaDeg = 45;  // Serial.println(thetaDeg);
     error = (thetaDesired - thetaDeg); 
     
     prev_time = time; 
@@ -68,10 +68,7 @@ void loop()
 
     //values passed to the PID_CONTROLLER
     Serial.println("-----------------------");
-    Serial.print("error: ");
-    Serial.println(error);
-    Serial.print("delta_t: ");
-    Serial.println(delta_t);
+    
 
     //read theta from encoder;
     // thetaDeg = (float)count*1.8; //
