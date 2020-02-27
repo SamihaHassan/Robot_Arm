@@ -33,54 +33,45 @@ PID* PIDA = new PID();
 
 void setup() {
   Serial.begin(9600);
-  // attachInterrupt(digitalPinToInterrupt(RUPT_PIN_A),ISRA,CHANGE);
-  // attachInterrupt(digitalPinToInterrupt(RUPT_PIN_B),ISRB,CHANGE);
-  // valA = digitalRead(RUPT_PIN_A); //initial reading
-  // valB = digitalRead(RUPT_PIN_B);
-  // dir = (valA ^ valB) ? 0 : 1;
-  // count = 0;
-  // pinMode(MOTOR_PIN_A, OUTPUT); //PWM pin
-  // pinMode(DIREC_A, OUTPUT); 
-  // pinMode(DIREC_B, OUTPUT); 
-  // setFWD();
+  attachInterrupt(digitalPinToInterrupt(RUPT_PIN_A),ISRA,CHANGE);
+  attachInterrupt(digitalPinToInterrupt(RUPT_PIN_B),ISRB,CHANGE);
+  valA = digitalRead(RUPT_PIN_A); //initial reading
+  valB = digitalRead(RUPT_PIN_B);
+  dir = (valA ^ valB) ? 0 : 1;
+  count = 0;
+  pinMode(MOTOR_PIN_A, OUTPUT); //PWM pin
+  pinMode(DIREC_A, OUTPUT); 
+  pinMode(DIREC_B, OUTPUT); 
+  setFWD();
    
-}
+} //end setup
 
 void loop()
 {        
     //Serial.println(dir);
-    // int speed = 200;
-    // analogWrite(MOTOR_PIN_A, speed); 
-    // secondsDelay(5);
-    // analogWrite(MOTOR_PIN_A, 0); //stop motor
-    // secondsDelay(5);
+    int speed = 200;
+    analogWrite(MOTOR_PIN_A, speed); 
 
     //read input for theta setpoint; thetaDesired = ?
-    
-    //calculate the error value
     thetaDesired = 60;
-    thetaDeg = 45;  // Serial.println(thetaDeg);
+
+    //read theta from encoder;
+    thetaDeg = (float)count*1.8; //Serial.println(thetaDeg); //thetaDeg = 45;   
+
+    //inputs for PID
     error = (thetaDesired - thetaDeg); 
-    
     prev_time = time; 
     time = millis(); 
     delta_t = time - prev_time; 
 
-    //values passed to the PID_CONTROLLER
-    Serial.println("-----------------------");
-    
 
-    //read theta from encoder;
-    // thetaDeg = (float)count*1.8; //
-    
-    //compute PID on theta desired
+    Serial.println("-----------------------"); 
+        //compute PID on theta desired
     pid = PIDA->ComputePID(delta_t, error); //Serial.println(pid);
   
     //applyPID();
     
-
-    //pid.PID(motorPIDA, thetaDeg);
-}
+} //end main
 
 void applyPID() {
     pwm = (int)pid;
