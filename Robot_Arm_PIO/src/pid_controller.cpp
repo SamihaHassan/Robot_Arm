@@ -11,8 +11,6 @@ PID::PID() {
 }
 
 float PID::ComputePID(unsigned long delta_t, float error) {
-    Serial.print("error: ");
-    Serial.println(error);
     Serial.print("prev_error: ");
     Serial.println(this->prev_error);
     // Serial.println("entered Compute PID");

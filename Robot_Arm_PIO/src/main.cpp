@@ -10,7 +10,6 @@ int dir = 0;
 int count = 0;
 float thetaDeg = 0;
 float thetaDesired = 0;
-float thetaDiff = 0;
 float pid = 0;
 int pwm = 0;
 
@@ -45,69 +44,60 @@ void setup() {
   pinMode(DIREC_A, OUTPUT); 
   pinMode(DIREC_B, OUTPUT); 
   setFWD();
-  int speed = 150;
-  analogWrite(MOTOR_PIN_A, speed); 
+  analogWrite(MOTOR_PIN_A, 0); 
+  secondsDelay(5);
+  analogWrite(MOTOR_PIN_A, 100); 
 } //end setup
 
 void loop()
 {        
     //Serial.println(dir);
-    
+    Serial.println("---------------------------------");
     //read input for theta setpoint; thetaDesired = ?
-    thetaDesired = 60;
-
+    thetaDesired = 180;
+    Serial.print("thetaDesired: ");
+    Serial.println(thetaDesired);
     //read theta from encoder;
     thetaDeg = DEG((float)count*1.8); //Serial.println(thetaDeg); //thetaDeg = 45;   
-    Serial.print("thetaDeg: ");
+    Serial.print("thetaActual: ");
     Serial.println(thetaDeg);
     //inputs for PID
-    error = (thetaDesired - thetaDeg); 
+    error = DEG(thetaDesired - thetaDeg); 
+    Serial.print("error: ");
+    Serial.println(error);
+
     prev_time = time; 
     time = millis(); 
     delta_t = time - prev_time; 
 
 
-    Serial.println("---------------------------------"); 
+    
     //compute PID on theta desired
-    pid = PIDA->ComputePID(delta_t, error); //
+    //pid = PIDA->ComputePID(delta_t, error); //
     applyPID();
-    Serial.print("pid: ");
-    Serial.println(pid);
+    // Serial.print("pid: ");
+    // Serial.println(pid);
   
     //applyPID();
     delay(100);
 } //end main
 
 void applyPID() {
-    pwm = (int)pid;
-    thetaDiff = thetaDesired - thetaDeg;
-    if ((thetaDiff) < 0) {
-        if (abs(thetaDiff) > 180 ) {
-          setREV();
-          analogWrite(pwm, MOTOR_PIN_A);
-        }
-        else {
-          setFWD();
-          analogWrite(pwm, MOTOR_PIN_A);
-        }
+    pwm = 100; //((int)pid > 255 ? 255 : (int)pid);
+    // if(error <= 15 ){
+    //   pwm = 0;
+    //   analogWrite(pwm, MOTOR_PIN_A);
+    // }
+    ///else 
+    if ( error <= 180 ) {
+      setREV();
+      analogWrite(pwm, MOTOR_PIN_A);
     }
-
-    else if ((thetaDiff) > 0){
-        if (abs(thetaDiff) > 180 ) {
-          setFWD();
-          analogWrite(pwm, MOTOR_PIN_A);
-        }
-        else {
-          setREV();
-          analogWrite(pwm, MOTOR_PIN_A);
-        }
-        
-        
-        
-        //turn rev
-        setREV();
-        analogWrite(pwm, MOTOR_PIN_A);
+    else {
+      setFWD();
+      analogWrite(pwm, MOTOR_PIN_A);
     }
+      
 }
 
 
@@ -126,11 +116,13 @@ void ISRB() {
 
 
 void setREV() {
+  Serial.println("REV");
   digitalWrite(DIREC_A, LOW);
   digitalWrite(DIREC_B, HIGH);
 }
 
 void setFWD() {
+  Serial.println("FWD");
   digitalWrite(DIREC_A, HIGH);
   digitalWrite(DIREC_B, LOW);  
 }
