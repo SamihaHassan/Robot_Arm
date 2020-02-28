@@ -10,6 +10,7 @@ int dir = 0;
 int count = 0;
 float thetaDeg = 0;
 float thetaDesired = 0;
+float thetaDiff = 0;
 float pid = 0;
 int pwm = 0;
 
@@ -45,7 +46,7 @@ void setup() {
   pinMode(DIREC_B, OUTPUT); 
   setFWD();
   analogWrite(MOTOR_PIN_A, 0); 
-  secondsDelay(5);
+  secondsDelay(1);
   analogWrite(MOTOR_PIN_A, 100); 
 } //end setup
 
@@ -62,9 +63,12 @@ void loop()
     Serial.print("thetaActual: ");
     Serial.println(thetaDeg);
     //inputs for PID
-    error = DEG(thetaDesired - thetaDeg); 
+    error = abs(thetaDesired - thetaDeg); 
+    thetaDiff = DEG(thetaDesired - thetaDeg); 
     Serial.print("error: ");
     Serial.println(error);
+    Serial.print("thetaDiff: ");
+    Serial.println(thetaDiff);
 
     prev_time = time; 
     time = millis(); 
@@ -73,23 +77,23 @@ void loop()
 
     
     //compute PID on theta desired
-    //pid = PIDA->ComputePID(delta_t, error); //
+    pid = PIDA->ComputePID(delta_t, thetaDiff);
+    Serial.print("PID output: ");
+    Serial.println(pid); 
+    
+    //use PID signal to follow trajectory 
     applyPID();
-    // Serial.print("pid: ");
-    // Serial.println(pid);
   
-    //applyPID();
     delay(100);
 } //end main
 
 void applyPID() {
-    pwm = 100; //((int)pid > 255 ? 255 : (int)pid);
-    // if(error <= 15 ){
-    //   pwm = 0;
-    //   analogWrite(pwm, MOTOR_PIN_A);
-    // }
-    ///else 
-    if ( error <= 180 ) {
+    //pwm = 100;
+    pwm = ((int)pid > 255 ? 255 : (int)pid);
+    Serial.print("pwm: ");
+    Serial.println(pwm);
+    //pwm = 100;
+    if ( thetaDiff <= 180 ) {
       setREV();
       analogWrite(pwm, MOTOR_PIN_A);
     }
