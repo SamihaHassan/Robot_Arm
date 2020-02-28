@@ -17,7 +17,7 @@ class PID
     
   public:
     #define K_P 0.6
-    #define K_D 0
+    #define K_D 0.2
     #define K_I 0
     
     PID();
