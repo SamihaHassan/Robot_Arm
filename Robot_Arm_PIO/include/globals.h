@@ -10,4 +10,7 @@
 #define DIREC_A 7
 #define DIREC_B 6
 
+#define DEG(A) ( ((A) < 0) ? 360 + (A) : (A) )
+
+
 #endif

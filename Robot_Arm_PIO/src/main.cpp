@@ -14,30 +14,11 @@ float thetaDiff = 0;
 float pid = 0;
 int pwm = 0;
 
-#define THETA_LOW 0
-#define THETA_HIGH 180
-int thetaDirection = 1;
 //PID controller variables 
 unsigned long time = 0; 
 unsigned long prev_time = 0; 
 unsigned long delta_t; 
 float error; 
-
-
-void thetaCallback(){
-  if (thetaDeg >= THETA_HIGH) {
-    thetaDirection = 0;
-  } else if (thetaDeg <= THETA_LOW) {
-    thetaDirection = 1;
-  }
-  
-  if (thetaDirection) {
-    thetaDeg ++;
-  } else {
-    thetaDeg --;
-  }
-}
-
 
 void secondsDelay(int n);
 
@@ -64,19 +45,19 @@ void setup() {
   pinMode(DIREC_A, OUTPUT); 
   pinMode(DIREC_B, OUTPUT); 
   setFWD();
+  int speed = 150;
+  analogWrite(MOTOR_PIN_A, speed); 
 } //end setup
 
 void loop()
 {        
     //Serial.println(dir);
-    int speed = 200;
-    analogWrite(MOTOR_PIN_A, speed); 
-
+    
     //read input for theta setpoint; thetaDesired = ?
     thetaDesired = 60;
 
     //read theta from encoder;
-    thetaDeg = (float)count*1.8; //Serial.println(thetaDeg); //thetaDeg = 45;   
+    thetaDeg = DEG((float)count*1.8); //Serial.println(thetaDeg); //thetaDeg = 45;   
     Serial.print("thetaDeg: ");
     Serial.println(thetaDeg);
     //inputs for PID
@@ -86,7 +67,7 @@ void loop()
     delta_t = time - prev_time; 
 
 
-    Serial.println("-----------------------"); 
+    Serial.println("---------------------------------"); 
     //compute PID on theta desired
     pid = PIDA->ComputePID(delta_t, error); //
     applyPID();
@@ -144,12 +125,12 @@ void ISRB() {
 }
 
 
-void setFWD() {
+void setREV() {
   digitalWrite(DIREC_A, LOW);
   digitalWrite(DIREC_B, HIGH);
 }
 
-void setREV() {
+void setFWD() {
   digitalWrite(DIREC_A, HIGH);
   digitalWrite(DIREC_B, LOW);  
 }
