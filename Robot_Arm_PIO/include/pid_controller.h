@@ -16,8 +16,8 @@ class PID
     float output; 
     
   public:
-    #define K_P 11
-    #define K_D 1
+    #define K_P 2
+    #define K_D 0
     #define K_I 0
     
     PID();

@@ -2,6 +2,7 @@
 #include <Arduino.h>
 #include <globals.h>
 #include <pid_controller.h>
+//#include <Ticker.h>
 
 int valA = 0;
 int valB = 0;
@@ -9,14 +10,34 @@ int dir = 0;
 int count = 0;
 float thetaDeg = 0;
 float thetaDesired = 0;
+float thetaDiff = 0;
 float pid = 0;
 int pwm = 0;
 
+#define THETA_LOW 0
+#define THETA_HIGH 180
+int thetaDirection = 1;
 //PID controller variables 
 unsigned long time = 0; 
 unsigned long prev_time = 0; 
 unsigned long delta_t; 
 float error; 
+
+
+void thetaCallback(){
+  if (thetaDeg >= THETA_HIGH) {
+    thetaDirection = 0;
+  } else if (thetaDeg <= THETA_LOW) {
+    thetaDirection = 1;
+  }
+  
+  if (thetaDirection) {
+    thetaDeg ++;
+  } else {
+    thetaDeg --;
+  }
+}
+
 
 void secondsDelay(int n);
 
@@ -43,7 +64,6 @@ void setup() {
   pinMode(DIREC_A, OUTPUT); 
   pinMode(DIREC_B, OUTPUT); 
   setFWD();
-   
 } //end setup
 
 void loop()
@@ -57,7 +77,8 @@ void loop()
 
     //read theta from encoder;
     thetaDeg = (float)count*1.8; //Serial.println(thetaDeg); //thetaDeg = 45;   
-
+    Serial.print("thetaDeg: ");
+    Serial.println(thetaDeg);
     //inputs for PID
     error = (thetaDesired - thetaDeg); 
     prev_time = time; 
@@ -66,23 +87,42 @@ void loop()
 
 
     Serial.println("-----------------------"); 
-        //compute PID on theta desired
-    pid = PIDA->ComputePID(delta_t, error); //Serial.println(pid);
+    //compute PID on theta desired
+    pid = PIDA->ComputePID(delta_t, error); //
+    applyPID();
+    Serial.print("pid: ");
+    Serial.println(pid);
   
     //applyPID();
-    
+    delay(100);
 } //end main
 
 void applyPID() {
     pwm = (int)pid;
-    
-    if (thetaDesired - thetaDeg < 180) {
-        //turn fwd
-        setFWD();
-        analogWrite(pwm, MOTOR_PIN_A);
+    thetaDiff = thetaDesired - thetaDeg;
+    if ((thetaDiff) < 0) {
+        if (abs(thetaDiff) > 180 ) {
+          setREV();
+          analogWrite(pwm, MOTOR_PIN_A);
+        }
+        else {
+          setFWD();
+          analogWrite(pwm, MOTOR_PIN_A);
+        }
     }
 
-    else {
+    else if ((thetaDiff) > 0){
+        if (abs(thetaDiff) > 180 ) {
+          setFWD();
+          analogWrite(pwm, MOTOR_PIN_A);
+        }
+        else {
+          setREV();
+          analogWrite(pwm, MOTOR_PIN_A);
+        }
+        
+        
+        
         //turn rev
         setREV();
         analogWrite(pwm, MOTOR_PIN_A);

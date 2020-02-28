@@ -11,8 +11,6 @@ PID::PID() {
 }
 
 float PID::ComputePID(unsigned long delta_t, float error) {
-    Serial.print("delta_t: ");
-    Serial.println(delta_t);
     Serial.print("error: ");
     Serial.println(error);
     Serial.print("prev_error: ");
@@ -22,7 +20,7 @@ float PID::ComputePID(unsigned long delta_t, float error) {
     // theta_current = ReadTheta(0); //0 represents first motor
 
     proportional = error * K_P; 
-    if (delta_t > 0)
+    if (delta_t > 0) //so derivative term is not infinity
     derivative = (error - prev_error)/delta_t * K_D;
     
     
@@ -38,8 +36,6 @@ float PID::ComputePID(unsigned long delta_t, float error) {
     prev_error = error;
 
     output = this->proportional + this->derivative + this->integral;
-    Serial.print("output: ");
-    Serial.println(output);
         
     return output;
     
