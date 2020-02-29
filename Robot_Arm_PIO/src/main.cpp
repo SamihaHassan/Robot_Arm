@@ -77,7 +77,7 @@ void loop()
 
     
     //compute PID on theta desired
-    pid = PIDA->ComputePID(delta_t, thetaDiff);
+    pid = PIDA->ComputePID(delta_t, error);
     Serial.print("PID output: ");
     Serial.println(pid); 
     
