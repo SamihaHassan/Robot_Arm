@@ -82,9 +82,9 @@ void loop()
     Serial.println(pid); 
     
     //use PID signal to follow trajectory 
-    applyPID();
+    //applyPID();
   
-    delay(100);
+    
 } //end main
 
 void applyPID() {
