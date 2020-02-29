@@ -4,6 +4,7 @@ int valA = 0;
 int valB = 0;
 int dir = 0;
 int count = 0;
+float last_thetaDeg = 0;
 float thetaDeg = 0;
 
 int motorPin = 4;
@@ -39,17 +40,20 @@ void setup() {
 
 void loop()
 {
-    int speed = 200;
+    int speed = 100;
+    count = 0;
     
     analogWrite(motorPin, speed);
-    
-    //Serial.println(dir);
-    secondsDelay(5);
+    secondsDelay(2);
     analogWrite(motorPin, 0);
-    secondsDelay(5);
+    secondsDelay(2);
+
+    
     thetaDeg = (float)count*1.8;
     
     Serial.println(thetaDeg);
+    Serial.println(dir);
+    Serial.println(count);
 }
 
 

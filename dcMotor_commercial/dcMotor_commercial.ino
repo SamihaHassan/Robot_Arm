@@ -3,7 +3,7 @@ Adafruit Arduino - Lesson 13. DC Motor
 */
  
  
-int motorPin = 4;
+int motorPin = 11;
 int DIREC_A = 7;
 int DIREC_B = 6;
 
@@ -36,12 +36,5 @@ void loop()
       analogWrite(motorPin, speed);
     }
 
-//    secondsDelay(3);
-//    speed = 250;
-//    if (speed >= 0 && speed <= 255)
-//    {
-//      analogWrite(motorPin, speed);
-//    }
-    
-  
+
 } 
