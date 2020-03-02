@@ -48,7 +48,6 @@ void setup() {
   analogWrite(MOTOR_PIN_A, 0); 
   secondsDelay(3);
   analogWrite(MOTOR_PIN_A, 100); 
-  while(1);
 } //end setup
 
 void loop()
@@ -56,7 +55,7 @@ void loop()
     //Serial.println(dir);
     Serial.println("---------------------------------");
     //read input for theta setpoint; thetaDesired = ?
-    thetaDesired = 90;
+    thetaDesired = 120;
     Serial.print("thetaDesired: ");
     Serial.println(thetaDesired);
     //read theta from encoder;
@@ -82,10 +81,10 @@ void loop()
     Serial.println(pid); 
     
     analogWrite(MOTOR_PIN_A, abs(pid));
-    if (pid < -10) {
+    if (pid < -5) {
       setFWD();
     }
-    else if (pid > 10) {
+    else if (pid > 5) {
       setREV();
     }
     else
