@@ -11,7 +11,7 @@ int count = 0;
 float thetaDeg = 0;
 float thetaDesired = 0;
 float thetaDiff = 0;
-float pid = 0;
+int pid = 0;
 int pwm = 0;
 
 //PID controller variables 
@@ -44,10 +44,11 @@ void setup() {
   pinMode(MOTOR_PIN_A, OUTPUT); //PWM pin
   pinMode(DIREC_A, OUTPUT); 
   pinMode(DIREC_B, OUTPUT); 
-  setFWD();
+  setREV();
   analogWrite(MOTOR_PIN_A, 0); 
-  secondsDelay(1);
+  secondsDelay(3);
   analogWrite(MOTOR_PIN_A, 100); 
+  while(1);
 } //end setup
 
 void loop()
@@ -55,7 +56,7 @@ void loop()
     //Serial.println(dir);
     Serial.println("---------------------------------");
     //read input for theta setpoint; thetaDesired = ?
-    thetaDesired = 180;
+    thetaDesired = 90;
     Serial.print("thetaDesired: ");
     Serial.println(thetaDesired);
     //read theta from encoder;
@@ -63,8 +64,9 @@ void loop()
     Serial.print("thetaActual: ");
     Serial.println(thetaDeg);
     //inputs for PID
-    error = abs(thetaDesired - thetaDeg); 
-    thetaDiff = DEG(thetaDesired - thetaDeg); 
+    
+    error = thetaDesired - thetaDeg; 
+    //thetaDiff = DEG(thetaDesired - thetaDeg); 
     Serial.print("error: ");
     Serial.println(error);
     Serial.print("thetaDiff: ");
@@ -74,35 +76,29 @@ void loop()
     time = millis(); 
     delta_t = time - prev_time; 
 
-
-    
     //compute PID on theta desired
-    pid = PIDA->ComputePID(delta_t, error);
-    Serial.print("PID output: ");
+    pid = (PIDA->ComputePID(delta_t, error));
+    Serial.print("PID pwm: ");
     Serial.println(pid); 
+    
+    analogWrite(MOTOR_PIN_A, abs(pid));
+    if (pid < -10) {
+      setFWD();
+    }
+    else if (pid > 10) {
+      setREV();
+    }
+    else
+    {
+      analogWrite(MOTOR_PIN_A, 0);
+    }
+    delayMicroseconds(50);
     
     //use PID signal to follow trajectory 
     //applyPID();
   
     
 } //end main
-
-void applyPID() {
-    //pwm = 100;
-    pwm = ((int)pid > 255 ? 255 : (int)pid);
-    Serial.print("pwm: ");
-    Serial.println(pwm);
-    //pwm = 100;
-    if ( thetaDiff <= 180 ) {
-      setREV();
-      analogWrite(pwm, MOTOR_PIN_A);
-    }
-    else {
-      setFWD();
-      analogWrite(pwm, MOTOR_PIN_A);
-    }
-      
-}
 
 
 void ISRA() {

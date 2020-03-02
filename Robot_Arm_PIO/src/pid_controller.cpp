@@ -10,7 +10,7 @@ PID::PID() {
     this->prev_error = 0.0;
 }
 
-float PID::ComputePID(unsigned long delta_t, float error) {
+int PID::ComputePID(unsigned long delta_t, float error) {
     Serial.print("prev_error: ");
     Serial.println(this->prev_error);
     // Serial.println("entered Compute PID");
@@ -34,7 +34,9 @@ float PID::ComputePID(unsigned long delta_t, float error) {
     prev_error = error;
 
     output = this->proportional + this->derivative + this->integral;
-        
+    Serial.print("PID output: ");
+    Serial.println(output); 
+    output = map((int)output, -200, 200, -255, 255);
     return output;
     
 }; //end
