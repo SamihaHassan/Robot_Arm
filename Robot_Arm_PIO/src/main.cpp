@@ -87,6 +87,9 @@ void loop()
     else if (pid > 5) {
       setREV();
     }
+    // else if ((pid>-50)&&(pid<50)) {
+
+    // }
     else
     {
       analogWrite(MOTOR_PIN_A, 0);

@@ -36,7 +36,7 @@ int PID::ComputePID(unsigned long delta_t, float error) {
     output = this->proportional + this->derivative + this->integral;
     Serial.print("PID output: ");
     Serial.println(output); 
-    output = map((int)output, -200, 200, -255, 255);
+    output = map((int)output, -180, 180, -255, 255);
     return output;
     
 }; //end
