@@ -1,4 +1,4 @@
-#define MAX_NUM 10
+#define MAX_NUM 40
 int ruptPinA = 2;
 int ruptPinB = 3;
 int valA = 0;
@@ -16,6 +16,11 @@ int motorPin = 4;
 int DirecOne = 7;
 int DirecTwo = 6;
 
+//MATLAB readings for graph 
+#define timePin 8
+#define speedPin 9
+
+//time delay 
 void secondsDelay(int n);
 
 //Interrupts from slot detectors to determine the direction of spin
@@ -36,9 +41,16 @@ void setup() {
   valB = digitalRead(ruptPinB);
   dir = (valA ^ valB) ? 0 : 1;
   count = 0;
+
+  //Motor PIn definition 
   pinMode(motorPin, OUTPUT); //PWM pin
   pinMode(DirecOne, OUTPUT); 
   pinMode(DirecTwo, OUTPUT); 
+
+  //Matlab Pin Definition 
+  pinMode(timePin, OUTPUT); 
+  pinMode(speedPin, OUTPUT); 
+  
   spinFWD();
   Serial.print("done setup\n");
   secondsDelay(3);
@@ -49,21 +61,18 @@ void setup() {
 void loop()
 
 {   
-  static int a = 0;
+    static int a = 0;
   
     last_time = now_time;
     last_theta = now_theta;
-    int speed = 70;
-//    count = 0;
+    int speed = 70; //motor pwm - keep it slow
     
-    analogWrite(motorPin, speed);
+    analogWrite(motorPin, speed); 
     secondsDelay(1);
-//    analogWrite(motorPin, 0);
-//    secondsDelay(2);
-
     
     now_theta = (float)count*1.8;
     now_time = millis();
+    
     arr[a][1] = now_time;
     AngSpeed = (now_theta-last_theta)/(float)(now_time-last_time);
     arr[a][0] = AngSpeed;
@@ -73,6 +82,7 @@ void loop()
 //    Serial.print(AngSpeed);
 //    Serial.print("\ttime\t");
 //    Serial.println(now_time);
+  
   a++;
   if (a>MAX_NUM) {
      for (int i=0; i<MAX_NUM; i++) {
@@ -80,7 +90,7 @@ void loop()
         Serial.print(arr[i][j]);
         Serial.print("\t");
       }
-       Serial.print("\n");
+       Serial.print("\n"); 
      } 
     Serial.print("done code\n");
   }
