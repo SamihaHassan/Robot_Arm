@@ -1,11 +1,16 @@
+#define MAX_NUM 10
 int ruptPinA = 2;
 int ruptPinB = 3;
 int valA = 0;
 int valB = 0;
 int dir = 0;
 int count = 0;
-float last_thetaDeg = 0;
-float thetaDeg = 0;
+float last_theta = 0;
+float now_theta = 0;
+unsigned long last_time = 0;
+unsigned long now_time = 0;
+float AngSpeed = 0;
+float arr[200][2];
 
 int motorPin = 4;
 int DirecOne = 7;
@@ -24,7 +29,7 @@ void spinREV();
 
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(115200);
   attachInterrupt(digitalPinToInterrupt(ruptPinA),ISRA,CHANGE);
   attachInterrupt(digitalPinToInterrupt(ruptPinB),ISRB,CHANGE);
   valA = digitalRead(ruptPinA); //initial reading
@@ -35,25 +40,51 @@ void setup() {
   pinMode(DirecOne, OUTPUT); 
   pinMode(DirecTwo, OUTPUT); 
   spinFWD();
+  Serial.print("done setup\n");
+  secondsDelay(3);
+  Serial.print("start loop\n");
   
 }
 
 void loop()
-{
-    int speed = 100;
-    count = 0;
+
+{   
+  static int a = 0;
+  
+    last_time = now_time;
+    last_theta = now_theta;
+    int speed = 70;
+//    count = 0;
     
     analogWrite(motorPin, speed);
-    secondsDelay(2);
-    analogWrite(motorPin, 0);
-    secondsDelay(2);
+    secondsDelay(1);
+//    analogWrite(motorPin, 0);
+//    secondsDelay(2);
 
     
-    thetaDeg = (float)count*1.8;
-    
-    Serial.println(thetaDeg);
-    Serial.println(dir);
-    Serial.println(count);
+    now_theta = (float)count*1.8;
+    now_time = millis();
+    arr[a][1] = now_time;
+    AngSpeed = (now_theta-last_theta)/(float)(now_time-last_time);
+    arr[a][0] = AngSpeed;
+//    Serial.print("now_theta\t");
+//    Serial.print(now_theta);
+//    Serial.print("\n\tspeed\t");
+//    Serial.print(AngSpeed);
+//    Serial.print("\ttime\t");
+//    Serial.println(now_time);
+  a++;
+  if (a>MAX_NUM) {
+     for (int i=0; i<MAX_NUM; i++) {
+      for (int j=0; j<2; j++) {
+        Serial.print(arr[i][j]);
+        Serial.print("\t");
+      }
+       Serial.print("\n");
+     } 
+    Serial.print("done code\n");
+  }
+  
 }
 
 
