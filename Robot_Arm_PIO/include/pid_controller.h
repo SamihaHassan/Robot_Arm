@@ -16,7 +16,7 @@ class PID
     float output; 
     
   public:
-    #define K_P 0.8
+    #define K_P 1
     #define K_D 0.8
     #define K_I 0
     
