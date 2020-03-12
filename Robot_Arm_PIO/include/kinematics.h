@@ -6,27 +6,30 @@
 class KIN
 {
   
-
     private:
-        #define length 100 ; //mm  
+        float length; //mm  
         float alpha;
         float radius;
-        float theta2;
+        float theta_2;
          
-
-        
     public: 
-        float x_coordinate; 
-        float y_coordinate; 
         struct coordinates {
-            float x;
-            float y;
+            float x_coordinate;
+            float y_coordinate;
         };
-        struct coordinates * position;
-        KIN();
-        float* directKin(float theta0, float theta1);
-        float* inverseKin(struct coordinates * x, struct coordinates * y);
+        
+         struct angles {
+            float theta_0;
+            float theta_1;
+        };
 
+        KIN();
+        coordinates directKin(angles);
+        angles inverseKin(coordinates);
+
+    private: 
+        struct coordinates position;
+        struct angles theta_val;
   
     
 }; //end class  

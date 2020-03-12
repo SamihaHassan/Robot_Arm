@@ -3,42 +3,42 @@
 #include <kinematics.h>
 #include <math.h>
 
-//contrustor
+
+//contructor
 KIN::KIN(){
-    this->coordinates = {0.0, 0.0}; 
-    this->theta_inst = {0.0, 0.0}; 
+
+    //private memebers
+    this->length = 100.0; 
+    this->alpha = 0.0; 
+    this->radius = 0.0; 
+    this->theta_2 = 0.0; 
+
+    //public memebers
+    this->position.x_coordinate =0.0; 
+    this->position.y_coordinate =0.0; 
+    this->theta_val.theta_0 = 0.0; 
+    this->theta_val.theta_1 = 0.0; 
 }
 
-void KIN::directKin(){
-    static int coordinates[2]; 
+KIN::coordinates KIN::directKin(KIN::angles theta_val){
+    float theta0 = theta_val.theta_0;
+    float theta1 = theta_val.theta_1;
 
-    x_coordinate = length *(cos(theta0)+cos(theta1)); 
-    y_coordinate = length *(sin(theta0+cos(theta1))); 
+    position.x_coordinate = length *(cos(theta0)+cos(theta1)); 
+    position.y_coordinate = length *(sin(theta0+cos(theta1))); 
     
-    coordinates[0] = x_coordinate; 
-    coordinates[1] = y_coordinate; 
+    return position; 
 }
 
-struct KIN::directKin(theta ){
-    static float coordinates[2]; 
+KIN::angles KIN::inverseKin(KIN::coordinates position) {
+    float x = position.x_coordinate;
+    float y = position.y_coordinate; 
 
-    x_coordinate = length *(cos(theta0)+cos(theta1)); 
-    y_coordinate = length *(sin(theta0+cos(theta1))); 
+    alpha = atan(abs(y/x));
+    radius = sqrt(x*x + y*y);
+    theta_2 = 2*atan(sqrt(4*length*length/(radius*radius)));
     
-    coordinates[0] = x_coordinate; 
-    coordinates[1] = y_coordinate; 
-    
-    return  coordinates; 
-}
 
-float* KIN::inverseKin(float coordinates[]) {
-    x_coordinate = coordinates[0];
-    y_coordinate = coordinates[1]; 
-
-    alpha = atan(abs(y_coordinate/x_coordinate));
-    radius = sqrt(x_coordinate*x_coordinate + y_coordinate*y_coordinate);
-    theta2 = 2*atan(sqrt(4*length*length/(radius*radius)));
-
-    return 
+    return theta_val;
 }
 
